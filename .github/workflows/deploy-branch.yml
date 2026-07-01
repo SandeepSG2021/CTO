@@ -1,0 +1,32 @@
+name: Deploy to gh-pages branch (fallback)
+
+# This workflow is a fallback for the main deploy.yml. It publishes to a
+# gh-pages branch so you can enable Pages via
+# Settings -> Pages -> Source: "Deploy from a branch" -> Branch: gh-pages / (root)
+# — which some accounts find easier to configure than "GitHub Actions".
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 12 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages
+          # Exclude repo internals from the deployed site.
+          exclude_assets: '.github,.git,.gitignore,README.md'
