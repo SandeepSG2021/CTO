@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CTO Readiness Coach & Daily Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div>
+        <h1 id="app-title">CTO Readiness Coach</h1>
+        <p id="app-subtitle" class="muted">Daily activity tracker & deviation analysis</p>
+      </div>
+      <div class="header-actions">
+        <button id="btn-export" class="btn btn-ghost" title="Download all your data as JSON">Export</button>
+        <label class="btn btn-ghost" for="file-import" title="Restore from a JSON backup">Import
+          <input id="file-import" type="file" accept="application/json" hidden />
+        </label>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="coach" role="tab" aria-selected="true">1. Coach Roadmap</button>
+      <button class="tab-btn" data-tab="daily" role="tab" aria-selected="false">2. Daily Activities</button>
+      <button class="tab-btn" data-tab="report" role="tab" aria-selected="false">3. Report</button>
+    </nav>
+  </header>
+
+  <main class="app-main">
+
+    <!-- ============ TAB 1: COACH ROADMAP ============ -->
+    <section id="tab-coach" class="tab-panel active" role="tabpanel">
+      <div class="panel-intro">
+        <p>The full brutally-honest CTO readiness assessment and phase-wise roadmap. Every section below is what your daily activities in Tab 2 will be scored against.</p>
+      </div>
+      <div id="coach-content"></div>
+    </section>
+
+    <!-- ============ TAB 2: DAILY ACTIVITIES ============ -->
+    <section id="tab-daily" class="tab-panel" role="tabpanel">
+      <div class="panel-intro">
+        <h2>Log today's activities</h2>
+        <p>List what you actually did today — meetings led, conversations, decisions, moments you paused or pushed. Be honest. The analyzer will match your entries against the roadmap and flag risks.</p>
+      </div>
+
+      <form id="activity-form" class="card">
+        <div class="form-row">
+          <label for="activity-date">Date</label>
+          <input type="date" id="activity-date" required />
+        </div>
+        <div class="form-row">
+          <label for="activity-text">Activities (one per line, be specific)</label>
+          <textarea id="activity-text" rows="8" placeholder="Examples:&#10;- Led architecture review with 8 architects. Pushed my recommendation early.&#10;- 1:1 with junior engineer, asked how I can help.&#10;- Delegated the design doc to Priya, did not touch it.&#10;- Went too deep technically in the VP steering meeting.&#10;- Wrote a 1-page POV on our AI platform strategy."></textarea>
+        </div>
+        <div class="form-row">
+          <label for="activity-mood">Self-rated day (1 = drifted, 5 = on-plan)</label>
+          <input type="range" id="activity-mood" min="1" max="5" step="1" value="3" />
+          <span id="mood-value" class="mood-badge">3</span>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Save & analyze</button>
+          <button type="button" id="btn-clear-form" class="btn btn-ghost">Clear</button>
+        </div>
+      </form>
+
+      <div id="analysis-result" class="analysis"></div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Recent entries</h3>
+          <button id="btn-delete-all" class="btn btn-danger-ghost" title="Erase every logged day">Delete all history</button>
+        </div>
+        <div id="entries-list"></div>
+      </div>
+    </section>
+
+    <!-- ============ TAB 3: REPORT ============ -->
+    <section id="tab-report" class="tab-panel" role="tabpanel">
+      <div class="panel-intro">
+        <h2>Deviation report</h2>
+        <p>Rolling view of where your daily behavior aligns with the roadmap — and where it drifts.</p>
+      </div>
+
+      <div class="report-grid">
+        <div class="card kpi">
+          <div class="kpi-label">Days logged</div>
+          <div class="kpi-value" id="kpi-days">0</div>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-label">Alignment score (30d)</div>
+          <div class="kpi-value" id="kpi-score">—</div>
+          <div class="kpi-sub" id="kpi-score-sub">no data yet</div>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-label">Current streak</div>
+          <div class="kpi-value" id="kpi-streak">0</div>
+          <div class="kpi-sub">consecutive days logged</div>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-label">Top risk area</div>
+          <div class="kpi-value" id="kpi-risk">—</div>
+          <div class="kpi-sub" id="kpi-risk-sub">based on last 30 days</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Alignment by category (last 30 days)</h3>
+        <div id="category-bars"></div>
+      </div>
+
+      <div class="card">
+        <h3>Deviations flagged</h3>
+        <div id="deviations-list"></div>
+      </div>
+
+      <div class="card">
+        <h3>This week's coach reflection questions</h3>
+        <ol id="weekly-questions"></ol>
+      </div>
+
+      <div class="card">
+        <h3>Full log</h3>
+        <div id="report-log"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer muted">
+    <span>All data stays in your browser (localStorage). Export regularly for backup.</span>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
