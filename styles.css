@@ -273,6 +273,12 @@ input[type="range"] { padding: 0; }
 .entry-row:first-child { border-top: none; }
 .entry-row .entry-date { font-weight: 600; min-width: 110px; }
 .entry-row .entry-text { flex: 1; white-space: pre-wrap; font-size: 0.92rem; color: var(--text); }
+.entry-feedback {
+  margin-top: 0.4rem; padding: 0.5rem 0.65rem;
+  background: var(--panel-2); border-left: 3px solid var(--accent);
+  border-radius: 4px; font-size: 0.9rem; color: var(--text);
+}
+.entry-feedback strong { color: var(--accent); margin-right: 0.25rem; }
 .entry-row .entry-score { min-width: 60px; text-align: right; }
 .entry-actions { display: flex; gap: 0.35rem; }
 .icon-btn {

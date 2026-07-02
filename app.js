@@ -192,13 +192,15 @@
       e.preventDefault();
       const date = dateInput.value || todayISO();
       const text = $('#activity-text').value.trim();
+      const feedback = $('#activity-feedback').value.trim();
       const moodScore = Number(mood.value);
-      if (!text) return;
+      if (!text && !feedback) return;
 
-      const analysis = analyze(text);
+      const combined = [text, feedback].filter(Boolean).join('\n');
+      const analysis = analyze(combined);
       const entry = {
         id: `${date}-${Date.now()}`,
-        date, text, moodScore,
+        date, text, feedback, moodScore,
         alignmentScore: analysis.alignmentScore,
         positiveHits: analysis.positiveHits,
         negativeHits: analysis.negativeHits,
@@ -215,11 +217,13 @@
       renderEntries();
 
       $('#activity-text').value = '';
+      $('#activity-feedback').value = '';
       mood.value = 3; moodVal.textContent = '3';
     });
 
     $('#btn-clear-form').addEventListener('click', () => {
       $('#activity-text').value = '';
+      $('#activity-feedback').value = '';
       $('#activity-mood').value = 3;
       $('#mood-value').textContent = '3';
       $('#analysis-result').innerHTML = '';
@@ -323,7 +327,10 @@
     list.innerHTML = entries.slice(0, 20).map((e) => `
       <div class="entry-row" data-id="${escapeHtml(e.id)}">
         <div class="entry-date">${escapeHtml(e.date)}</div>
-        <div class="entry-text">${escapeHtml(e.text)}</div>
+        <div class="entry-text">
+          ${e.text ? `<div>${escapeHtml(e.text)}</div>` : ''}
+          ${e.feedback ? `<div class="entry-feedback"><strong>Feedback:</strong> ${escapeHtml(e.feedback)}</div>` : ''}
+        </div>
         <div class="entry-score">
           <div class="big-score ${scoreClass(e.alignmentScore)}" style="font-size:1.1rem;padding:0.3rem 0.6rem;">${e.alignmentScore}</div>
         </div>
@@ -462,7 +469,10 @@
     container.innerHTML = entries.map((e) => `
       <div class="report-log-row">
         <div class="entry-date">${escapeHtml(e.date)}</div>
-        <div class="rl-text">${escapeHtml(e.text)}</div>
+        <div class="rl-text">
+          ${e.text ? `<div>${escapeHtml(e.text)}</div>` : ''}
+          ${e.feedback ? `<div class="entry-feedback"><strong>Feedback:</strong> ${escapeHtml(e.feedback)}</div>` : ''}
+        </div>
         <div class="big-score ${scoreClass(e.alignmentScore)}" style="font-size:1rem;padding:0.25rem 0.6rem;">${e.alignmentScore}</div>
       </div>
     `).join('');
